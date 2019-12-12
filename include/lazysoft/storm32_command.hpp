@@ -1,9 +1,6 @@
 #ifndef _STORM32_COMMAND_HPP_
 #define _STORM32_COMMAND_HPP_
 
-#include <iostream>
-#include <bitset>
-
 #include <cstring>
 #include <chrono>
 #include <lazysoft/checksum.hpp>
@@ -24,7 +21,6 @@ class Storm32_command{
 		double* getAngles();
 
 		uint8_t* getVersion();
-		//uint8_t* getDataFields();
 		uint8_t* getDataFields(const char* live_data);
 		uint8_t* setAngle(float pitch, float roll, float yaw);
 

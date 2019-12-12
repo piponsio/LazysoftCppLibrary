@@ -4,7 +4,6 @@ Storm32_command::Storm32_command(const char* dev = NULL, speed_t baud = B0):size
 }
 
 double* Storm32_command::getAngles(){
-	//float angles[3];
 	angles[0] = 999.9;
 	angles[1] = 999.9;
 	angles[2] = 999.9;
@@ -15,34 +14,6 @@ double* Storm32_command::getAngles(){
 
 	this->getDataFields("IMU1ANGLES");
 
-	/*
-	std::cout << this->size << "\n\r";
-
-	std::cout << std::hex << (int)this->buffer[0] << "\n\r";
-	std::cout << std::hex << (int)this->buffer[1] << "\n\r";
-	std::cout << std::hex << (int)this->buffer[2] << "\n\r";
-	std::cout << std::hex << (int)this->buffer[3] << "\n\r";
-	std::cout << std::hex << (int)this->buffer[4] << "\n\r";
-	std::cout << std::hex << (int)this->buffer[5] << "\n\r";
-	std::cout << std::hex << (int)this->buffer[6] << "\n\r";
-	std::cout << std::hex << (int)this->buffer[7] << "\n\r";
-	std::cout << std::hex << (int)this->buffer[8] << "\n\r";
-	std::cout << std::hex << (int)this->buffer[9] << "\n\r";
-	std::cout << std::hex << (int)this->buffer[10] << "\n\r";
-	std::cout << std::hex << (int)this->buffer[11] << "\n\r";
-	std::cout << std::hex << (int)this->buffer[12] << "\n\r";
-	std::cout << "\n\r";
-
-	//std::cout << std::bitset<8>(this->buffer[6]) << "\t";
-	//std::cout << std::bitset<8>(this->buffer[5]) << "\t";
-
-	//std::cout << std::dec << this->buffer[8] << "\t";
-	//std::cout << std::dec << this->buffer[7] << "\t";
-
-	//std::cout << std::dec << this->buffer[10] << "\t";
-	//std::cout << std::dec << this->buffer[9];
-
-*/
 	pitch = (uint16_t) this->buffer[5];
 	pitch = pitch | ( (uint16_t)this->buffer[6] << 8);
 
@@ -57,16 +28,6 @@ double* Storm32_command::getAngles(){
 	yaw = yaw | ( (uint16_t)this->buffer[10] << 8);
 
 	this->angles[2] = (yaw > 32767) ? ( (65535 - yaw) / -100.0) : (yaw / 100.0);
-	/*
-	//std::cout << std::hex << std::bitset<16>(pitch) << "\n\r";
-	std::cout << std::hex << (int)this->angles[0] << "\n\r";
-	std::cout << std::hex << (int)this->angles[1] << "\n\r";
-	std::cout << std::hex << (int)this->angles[2] << "\n\r";
-	std::cout << "\n\r";
-	*/
-	//std::cout << this->angles[0] << "\n\r";
-	//std::cout << this->angles[1] << "\n\r";
-	//std::cout << this->angles[2] << "\n\r";
 
 	return this->angles;
 }
@@ -107,14 +68,6 @@ uint8_t* Storm32_command::listen(uint8_t byte2listen = 0, std::chrono::microseco
 			if(byte2listen == 0 && size >= 2) this->buffer[size-1] = reading;
 
 			if( (this->size > 0) && (size >= this->size) ) exit = true;
-	/*
-		//	std::cout << std::dec << (int)reading << "\t";
-                        std::cout << std::hex << (int)reading << "\t";
-                        std::cout << std::dec << (int)size << "\t";
-                        std::cout << std::dec << (int)this->size << "\t";
-			if(reading == init_char) std::cout << "-> Inicio";
-                        std::cout << "\n\r";
-	*/
 		}
 
 		now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch());
@@ -122,7 +75,6 @@ uint8_t* Storm32_command::listen(uint8_t byte2listen = 0, std::chrono::microseco
 	}
 
 	this->time_listen = (now - init_time);
-	//std::cout << "micros: " << this->time_listen.count() << "\n\r";
 
 	return this->buffer;
 }

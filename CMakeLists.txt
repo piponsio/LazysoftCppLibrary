@@ -33,5 +33,5 @@ target_link_libraries(serialWrite serial)
 add_executable(storm32_commandSetAngle ${EXAMPLES_DIR}/storm32_commandSetAngle.cpp)
 target_link_libraries(storm32_commandSetAngle storm32_command)
 
-add_executable(serialRead ${EXAMPLES_DIR}/serialRead.cpp)
-target_link_libraries(serialRead storm32_command)
+add_executable(storm32_commandGetAngles ${EXAMPLES_DIR}/storm32_commandGetAngles.cpp)
+target_link_libraries(storm32_commandGetAngles storm32_command)
