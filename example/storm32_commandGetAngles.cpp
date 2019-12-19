@@ -4,9 +4,6 @@
 
 int main(int argc,char** argv){
 
-	Serial terminal("stdio",B0);
-	Serial storm32(argv[1], B9600);
-
 	float f0 = std::stof(argv[2]);
 	float f1 = std::stof(argv[3]);
 	float f2 = std::stof(argv[4]);
