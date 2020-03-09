@@ -8,7 +8,8 @@ int main(int argc,char** argv){
 	float f1 = std::stof(argv[3]);
 	float f2 = std::stof(argv[4]);
 
-	Storm32_command command(argv[1], B9600);
+	Serial com(argv[1], B9600);
+	Storm32_command command(&com);
 
  	command.setAngle(f0, f1, f2);
 	double* angles = command.getAngles();
