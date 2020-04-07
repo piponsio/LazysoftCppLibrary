@@ -4,23 +4,12 @@
 #include <cstring>
 #include <cstdlib>
 #include <unistd.h>
-//write
+
 #include <cstdint>
 #include <fcntl.h>
 #include <termios.h>
 
 class Serial{
-	public:
-		Serial(const char* dev, speed_t baud);
-		~Serial();
-
-		void write(unsigned char* buffer);
-		void write(const char* buffer);
-		void write(uint8_t* buffer, int length);
-
-		int read(unsigned char* buffer);
-
-		void close();
 	private:
 		speed_t baud;
 		const char* dev;
@@ -28,5 +17,15 @@ class Serial{
 		int tty_fd_out;
 		struct termios tio;
 		struct termios tio_aux;
+	public:
+		Serial(const char* dev, speed_t baud);
+		~Serial();
+
+		void write(unsigned char* buffer);
+		void write(const char* buffer);
+		void write(uint8_t* buffer, int length);
+		int read(unsigned char* buffer);
+		void close();
+
 };
 #endif
