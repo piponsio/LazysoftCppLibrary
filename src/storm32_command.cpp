@@ -1,14 +1,33 @@
 #include <lazysoft/storm32_command.hpp>
+#include <iostream>
+Storm32_command::Storm32_command(const char* dev, speed_t baud):size(0),buffer(NULL),angles{999.9,999.9,999.9}{
+	this->com = new Serial(dev, baud);
+}
+double Storm32_command::getAngle(int i){
+	return this->angles[i];
+}
+void Storm32_command::startLog(std::string path){
+	this->path_log = path;
+	if(this->log == 0 && this->outfile_log == NULL){
+		this->outfile_log = new std::ofstream();
+		(*this->outfile_log).open(this->path_log);
+	}
+	this->log = 1;
 
-//Storm32_command::Storm32_command(const char* dev, speed_t baud, std::fstream* data_logger):size(0),buffer(NULL),com(dev, baud),angles{999.9,999.9,999.9},data_logger(NULL){
-Storm32_command::Storm32_command(Serial* com, std::fstream* data_logger):size(0),buffer(NULL),com(com),angles{999.9,999.9,999.9},data_logger(NULL){
+}
+void Storm32_command::closeLog(){
+	if(this->log == 1 && this->outfile_log != NULL){
+		(*this->outfile_log).close();
+		this->outfile_log == NULL;
+	}
+	this->log = 0;
 }
 Storm32_command::~Storm32_command(){
-	if(this->data_logger != NULL) (*this->data_logger).close();
+	this->closeLog();
 }
-void Storm32_command::setDataLogger(std::ofstream* data_logger){
-	this->data_logger = data_logger;
-}
+//void Storm32_command::setDataLogger(std::ofstream* data_logger){
+//	this->data_logger = data_logger;
+//}
 double* Storm32_command::getAngles(){
 
 	uint16_t pitch;
@@ -90,7 +109,7 @@ uint8_t* Storm32_command::listen(uint8_t byte2listen, std::chrono::microseconds 
 					this->pre_buffer[size-1] = reading;
 //					std::cout << "asignando lectura a prebuffer" << std::endl;
 				}
-				if( (this->pre_size > 0) && (size >= this->pre_size) ){ 
+				if( (this->pre_size > 0) && (size >= this->pre_size) ){
 					exit = true;
 //					std::cout << "saliendo cuando el size alcanza al pre_size distinto a 0" << std::endl;
 
@@ -147,19 +166,16 @@ uint8_t* Storm32_command::listen(uint8_t byte2listen, std::chrono::microseconds 
 			//return NULL;
 		}
 	}
-	if(this->data_logger != NULL){
-		(*this->data_logger) << "Buffer_size: " << std::dec << +this->size << std::endl;
-		for(int i = 0; i < this->size; i++) (*this->data_logger) << std::hex << +this->buffer[i] << " ";
-		(*this->data_logger) << std::endl;
+	if(this->log == 1 && this->outfile_log != NULL){
+		*(this->outfile_log) << "Buffer_size: " << std::dec << +this->size << std::endl;
+		for(int i = 0; i < this->size; i++) *(this->outfile_log) << std::hex << +this->buffer[i] << " ";
+		*(this->outfile_log) << std::endl;
 
-		(*this->data_logger) << "Listen_size: " << std::dec << +this->listen_size << std::endl;
-		for(int i = 0; i < this->listen_size; i++) (*this->data_logger) << std::hex << +this->listen_buffer[i] << " ";
-		(*this->data_logger) << std::endl;
+		*(this->outfile_log) << "Listen_size: " << std::dec << +this->listen_size << std::endl;
+		for(int i = 0; i < this->listen_size; i++) *(this->outfile_log) << std::hex << +this->listen_buffer[i] << " ";
+		*(this->outfile_log) << std::endl;
+
 	}
-	//	std::cout << "listen_size: " << + this->listen_size << std::endl;
-	//	for(int i = 0; i < this->listen_size; i++) std::cout << std::hex << +this->listen_buffer[i] << " ";
-	//	std::cout << std::endl;
-
 	return this->listen_buffer;
 }
 

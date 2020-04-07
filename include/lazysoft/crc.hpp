@@ -1,9 +1,7 @@
 #ifndef _CRC_HPP_
 #define _CRC_HPP_
 
-#include <cstring>
 #include <cstdint>
-#include <cstddef>
 
 class Crc{
 	public:
